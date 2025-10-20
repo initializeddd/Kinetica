@@ -139,31 +139,32 @@ namespace Kinetica::Log {
 #undef KLOG_WARN
 #undef KLOG_ERROR
 
+// ---- Public macros (simple, no fmt) ----
 #ifdef KINETICA_DEBUG_LOG
 #if K_HAVE_SOURCE_LOCATION
-#define KLOG_DEBUG(fmt, ...) ::Kinetica::Log::log_impl("DEBUG", ::Kinetica::Log::Color::debug, fmt::format(fmt, __VA_ARGS__))
-#define KLOG_INFO(fmt, ...)  ::Kinetica::Log::log_impl("INFO",  ::Kinetica::Log::Color::info,  fmt::format(fmt, __VA_ARGS__))
-#define KLOG_WARN(fmt, ...)  ::Kinetica::Log::log_impl("WARN",  ::Kinetica::Log::Color::warn,  fmt::format(fmt, __VA_ARGS__))
-#define KLOG_ERROR(fmt, ...) ::Kinetica::Log::log_impl("ERROR", ::Kinetica::Log::Color::error, fmt::format(fmt, __VA_ARGS__))
-        #else
-            #define KLOG_DEBUG(fmt, ...) ::Kinetica::Log::log_impl("DEBUG", ::Kinetica::Log::Color::debug, fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-            #define KLOG_INFO(fmt, ...)  ::Kinetica::Log::log_impl("INFO",  ::Kinetica::Log::Color::info,  fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-            #define KLOG_WARN(fmt, ...)  ::Kinetica::Log::log_impl("WARN",  ::Kinetica::Log::Color::warn,  fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-            #define KLOG_ERROR(fmt, ...) ::Kinetica::Log::log_impl("ERROR", ::Kinetica::Log::Color::error, fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-        #endif
+#define KLOG_DEBUG(msg) ::Kinetica::Log::log_impl("DEBUG", ::Kinetica::Log::Color::debug, std::string(msg))
+#define KLOG_INFO(msg)  ::Kinetica::Log::log_impl("INFO",  ::Kinetica::Log::Color::info,  std::string(msg))
+#define KLOG_WARN(msg)  ::Kinetica::Log::log_impl("WARN",  ::Kinetica::Log::Color::warn,  std::string(msg))
+#define KLOG_ERROR(msg) ::Kinetica::Log::log_impl("ERROR", ::Kinetica::Log::Color::error, std::string(msg))
     #else
-        #if K_HAVE_SOURCE_LOCATION
-            #define KLOG_DEBUG(fmt, ...) (void)0
-            #define KLOG_INFO(fmt, ...)  (void)0
-            #define KLOG_WARN(fmt, ...)  ::Kinetica::Log::log_impl("WARN",  "", fmt::format(fmt, __VA_ARGS__))
-            #define KLOG_ERROR(fmt, ...) ::Kinetica::Log::log_impl("ERROR", "", fmt::format(fmt, __VA_ARGS__))
-        #else
-            #define KLOG_DEBUG(fmt, ...) (void)0
-            #define KLOG_INFO(fmt, ...)  (void)0
-            #define KLOG_WARN(fmt, ...)  ::Kinetica::Log::log_impl("WARN",  "", fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-            #define KLOG_ERROR(fmt, ...) ::Kinetica::Log::log_impl("ERROR", "", fmt::format(fmt, __VA_ARGS__), __FILE__, __LINE__)
-        #endif
+        #define KLOG_DEBUG(msg) ::Kinetica::Log::log_impl("DEBUG", ::Kinetica::Log::Color::debug, std::string(msg), __FILE__, __LINE__)
+        #define KLOG_INFO(msg)  ::Kinetica::Log::log_impl("INFO",  ::Kinetica::Log::Color::info,  std::string(msg), __FILE__, __LINE__)
+        #define KLOG_WARN(msg)  ::Kinetica::Log::log_impl("WARN",  ::Kinetica::Log::Color::warn,  std::string(msg), __FILE__, __LINE__)
+        #define KLOG_ERROR(msg) ::Kinetica::Log::log_impl("ERROR", ::Kinetica::Log::Color::error, std::string(msg), __FILE__, __LINE__)
     #endif
-#endif // C++17
+#else
+    #if K_HAVE_SOURCE_LOCATION
+        #define KLOG_DEBUG(msg) (void)0
+        #define KLOG_INFO(msg)  (void)0
+        #define KLOG_WARN(msg)  ::Kinetica::Log::log_impl("WARN",  "", std::string(msg))
+        #define KLOG_ERROR(msg) ::Kinetica::Log::log_impl("ERROR", "", std::string(msg))
+    #else
+        #define KLOG_DEBUG(msg) (void)0
+        #define KLOG_INFO(msg)  (void)0
+        #define KLOG_WARN(msg)  ::Kinetica::Log::log_impl("WARN",  "", std::string(msg), __FILE__, __LINE__)
+        #define KLOG_ERROR(msg) ::Kinetica::Log::log_impl("ERROR", "", std::string(msg), __FILE__, __LINE__)
+    #endif
+#endif
+#endif
 
 #endif // KINETICA_LOG_HPP

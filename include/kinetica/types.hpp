@@ -1,6 +1,7 @@
 #ifndef KINETICA_TYPES_HPP
 #define KINETICA_TYPES_HPP
 
+#include <string>
 #include <cstdint>
 
 namespace Kinetica {
@@ -39,6 +40,19 @@ namespace Kinetica {
     // =============================================================================
     // Forward Declarations
     // =============================================================================
+
+
+    // =============================================================================
+    // Application arguments
+    // =============================================================================
+    struct SAppArgs {
+        bool showHelp = false;
+        bool showVersion = false;
+        bool headless = false;
+        std::string logLevel = "info";
+        std::string pluginDir;
+        std::vector<std::string> filesToOpen;
+    };
 
 } // namespace Kinetica
 
