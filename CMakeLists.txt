@@ -18,11 +18,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # ---- Options ----
 option(KINETICA_BUILD_EXAMPLES "Build example tools or utilities" OFF)
-option(KINETICA_ENABLE_WARNINGS "Enable compiler warnings as errors" ON)
+option(KINETICA_ENABLE_WARNINGS "Enable compiler warnings" ON)
 option(KINETICA_INSTALL "Generate install rules" ON)
-
-# ---- Find dependencies----
-
 
 # ---- Source files ----
 file(GLOB_RECURSE KINETICA_SOURCES
@@ -40,7 +37,7 @@ file(GLOB_RECURSE KINETICA_HEADERS
 # ---- Main executable ----
 add_executable(kinetica ${KINETICA_SOURCES} ${KINETICA_HEADERS})
 
-# ---- Include directories (PRIVATE for impl, PUBLIC for API) ----
+# ---- Include directories ----
 target_include_directories(kinetica
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -48,9 +45,6 @@ target_include_directories(kinetica
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-# ---- Compile definitions & features ----
-target_compile_features(kinetica PRIVATE cxx_std_20)
 
 # ---- Compiler warnings (professional hardening) ----
 if(KINETICA_ENABLE_WARNINGS)
@@ -65,45 +59,35 @@ if(KINETICA_ENABLE_WARNINGS)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         target_compile_options(kinetica PRIVATE
             /W4
-            /permissive-  # Strict standards conformance
+            /permissive-
         )
     endif()
 endif()
 
 # ---- Platform-specific settings ----
 if(WIN32)
-    # Enable UTF-8 manifest and console support (optional)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
-    # Require admin? Not here—handled by installer
-elseif(UNIX AND NOT APPLE)
-    # Linux: nothing special yet
 elseif(APPLE)
     # macOS: bundle support can be added later
 endif()
 
-# ---- Install rules (for future packaging) ----
+# ---- Install rules ----
 if(KINETICA_INSTALL)
     install(TARGETS kinetica
         RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
     )
-
     install(DIRECTORY include/
         DESTINATION include
         FILES_MATCHING PATTERN "*.h*"
     )
 endif()
 
-# ---- Optional: Add alias for development (e.g., for plugins) ----
-add_library(kinetica::core ALIAS kinetica)
-
-# ---- Examples or tools (optional) ----
+# ---- Examples (optional) ----
 if(KINETICA_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-# ---- Print summary (nice for devs) ----
+# ---- Build summary ----
 message(STATUS "Kinetica Build Configuration:")
 message(STATUS "  C++ Standard: C++20")
 message(STATUS "  Build Type:   ${CMAKE_BUILD_TYPE}")
