@@ -1,5 +1,6 @@
 #include <kinetica/log.hpp>
 #include <kinetica/types.hpp>
+#include <kinetica/window.hpp>
 
 #include <iostream>
 
@@ -52,11 +53,31 @@ publisher : Initialized
 
 
 int main(int argc, char* argv[]) {
-    Kinetica::SAppArgs arguments = parse_args(argc, argv);
-    if (arguments.showHelp)
+    Kinetica::SAppArgs args = parse_args(argc, argv);
+    if (args.showHelp) {
         print_help();
-    if (arguments.showVersion)
+        return static_cast<int>(Kinetica::EExitCode::Success);
+    }
+
+    if (args.showVersion) {
         print_version();
+        return static_cast<int>(Kinetica::EExitCode::Success);
+    }
+
+    if (args.headless) {
+        KLOG_INFO("Running in headless mode (not implemented yet)");
+        return static_cast<int>(Kinetica::EExitCode::Success);
+    }
+
+    Kinetica::CWindow window;
+    if (!window.isValid()) {
+        return static_cast<int>(Kinetica::EExitCode::InitializationFailed);
+    }
+
+    while (!window.shouldClose()) {
+        window.pollEvents();
+        // TODO: Render frame
+    }
 
     return static_cast<int>(Kinetica::EExitCode::Success);
 }

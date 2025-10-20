@@ -21,6 +21,20 @@ option(KINETICA_BUILD_EXAMPLES "Build example tools or utilities" OFF)
 option(KINETICA_ENABLE_WARNINGS "Enable compiler warnings" ON)
 option(KINETICA_INSTALL "Generate install rules" ON)
 
+# ---- Dependencies ----
+include(FetchContent)
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG        3.4
+)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL        OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(glfw)
+
+
 # ---- Source files ----
 file(GLOB_RECURSE KINETICA_SOURCES
     CONFIGURE_DEPENDS
@@ -94,3 +108,5 @@ message(STATUS "  Build Type:   ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Source Dir:   ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "  Binary Dir:   ${CMAKE_BINARY_DIR}")
 message(STATUS "  Warnings:     ${KINETICA_ENABLE_WARNINGS}")
+
+target_link_libraries(kinetica PRIVATE glfw)
