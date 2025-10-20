@@ -1,6 +1,6 @@
 # Kinetica
 
-![Kinetica Logo](https://raw.githubusercontent.com/initializeddd/Kinetica/main/assets/logo.png)
+![Kinetica Logo](https://raw.githubusercontent.com/initializeddd/Kinetica/main/assets/smallLogo.png)
 *Low-poly 3D modeling, reimagined.*
 
 Kinetica is a **free and open-source 3D modeling application** built from the ground up for **low-poly art creation**. Designed with simplicity, performance, and modularity in mind, it empowers artists and developers alike—no coding required to use, but easy to extend if you want to.
