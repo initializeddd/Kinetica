@@ -20,7 +20,6 @@ Kinetica is a **free and open-source 3D modeling application** built from the gr
 ## Vision
 
 - **Artist-first interface**: Clean, intuitive, and distraction-free.
-- **Fast & lightweight**: Built with a custom GPU backend (no OpenGL dependency).
 - **Plugin-ready**: Modular architecture for tools, exporters, and renderers.
 - **Cross-platform**: Windows, macOS, and Linux (coming soon).
 - **Made for low-poly**: Optimized workflows for hard-surface and stylized modeling.
