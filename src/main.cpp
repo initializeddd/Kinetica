@@ -83,6 +83,25 @@ int main(int argc, char* argv[]) {
     glewInit();
     Kinetica::CRenderer renderer(window);
 
+    const glm::mat4 view = glm::lookAt(
+        glm::vec3(0.0f, 0.0f, 2.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
+
+    auto updateProjection = [&](int width, int height) {
+        if (width <= 0 || height <= 0) return;
+        float aspect = static_cast<float>(width) / static_cast<float>(height);
+        glm::mat4 projection = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 100.0f);
+        renderer.setViewProjection(view, projection); // ✅ now 'view' is in scope
+    };
+
+    updateProjection(window.getWidth(), window.getHeight());
+
+    window.setResizeCallback([&](int w, int h) {
+        updateProjection(w, h);
+    });
+
     Kinetica::CRegistry registry;
 
     while (!window.shouldClose()) {

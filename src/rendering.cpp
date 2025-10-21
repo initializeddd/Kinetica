@@ -83,7 +83,7 @@ namespace Kinetica {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.10f, 0.104f, 0.104f, 1.0f);
 
         std::string vertSource = readFile("../shader/basic.vert");
         std::string fragSource = readFile("../shader/basic.frag");

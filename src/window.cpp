@@ -13,6 +13,20 @@
 #endif
 
 namespace Kinetica {
+    static CWindow* get_window_instance(GLFWwindow* window) {
+        return static_cast<CWindow*>(glfwGetWindowUserPointer(window));
+    }
+
+    void CWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        auto* self = get_window_instance(window);
+        if (self) {
+            self->m_width = width;
+            self->m_height = height;
+            if (self->m_resizeCallback) {
+                self->m_resizeCallback(width, height);
+            }
+        }
+    }
 
     static void glfw_error_callback(int error, const char* description) {
         KLOG_ERROR("GLFW error " + std::to_string(error) + ": " + std::string(description));
@@ -51,6 +65,9 @@ namespace Kinetica {
 
         m_pWindow = std::unique_ptr<GLFWwindow, decltype(deleter)>(raw, deleter);
         m_bValid = true;
+
+        glfwSetWindowUserPointer(raw, this);
+        glfwSetFramebufferSizeCallback(raw, framebufferResizeCallback);
 
         glfwMakeContextCurrent(m_pWindow.get());
     }
