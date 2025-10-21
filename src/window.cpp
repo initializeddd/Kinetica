@@ -69,6 +69,10 @@ namespace Kinetica {
         }
     }
 
+    bool CWindow::isMinimized() {
+        return glfwGetWindowAttrib(m_pWindow.get(), GLFW_ICONIFIED);
+    }
+
     bool CWindow::shouldClose() const {
         return m_bValid && m_pWindow ? glfwWindowShouldClose(m_pWindow.get()) : true;
     }

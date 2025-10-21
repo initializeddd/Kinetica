@@ -21,6 +21,7 @@ namespace Kinetica {
         void pollEvents();
         bool shouldClose() const;
         void swap();
+        bool isMinimized();
 
         std::unique_ptr<GLFWwindow, void(*)(GLFWwindow*)> m_pWindow;
 

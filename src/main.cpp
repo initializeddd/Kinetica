@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     while (!window.shouldClose()) {
         window.pollEvents();
 
-        // if (window.isMinimized()) { window.swap(); continue; }
+        if (window.isMinimized()) { window.swap(); continue; }
 
         renderer.clear();
 
