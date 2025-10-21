@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
         if (width <= 0 || height <= 0) return;
         float aspect = static_cast<float>(width) / static_cast<float>(height);
         glm::mat4 projection = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 100.0f);
-        renderer.setViewProjection(view, projection); // ✅ now 'view' is in scope
+        renderer.setViewProjection(view, projection);
     };
 
     updateProjection(window.getWidth(), window.getHeight());
