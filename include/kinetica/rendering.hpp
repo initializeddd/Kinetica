@@ -5,8 +5,6 @@
 #error "Include rendering.hpp before window.hpp"
 #endif
 
-#define GLEW_EXPERIMENTAL
-
 #include <GL/glew.h>
 #include <string>
 

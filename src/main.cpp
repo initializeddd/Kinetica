@@ -2,6 +2,11 @@
 #include <kinetica/log.hpp>
 #include <kinetica/types.hpp>
 #include <kinetica/window.hpp>
+#include <kinetica/ecs/registry.hpp>
+
+#include <kinetica/ecs/components/transform.hpp>
+#include <kinetica/ecs/components/material.hpp>
+#include <kinetica/ecs/components/mesh.hpp>
 
 #include <iostream>
 
@@ -78,10 +83,25 @@ int main(int argc, char* argv[]) {
     glewInit();
     Kinetica::CRenderer renderer(window);
 
+    Kinetica::CRegistry registry;
+
     while (!window.shouldClose()) {
         window.pollEvents();
 
+        // if (window.isMinimized()) { window.swap(); continue; }
+
         renderer.clear();
+
+        const auto allEntities = registry.getAllEntities();
+        for (const auto& entity : allEntities) {
+            auto* transform = registry.getComponent<Kinetica::Components::STransform>(entity);
+            auto* mesh      = registry.getComponent<Kinetica::Components::SMesh>(entity);
+            auto* material  = registry.getComponent<Kinetica::Components::SMaterial>(entity);
+
+            if (transform && mesh && material) {
+                // renderer.renderEntity(*transform, *mesh, *material);
+            }
+        }
 
         window.swap();
     }

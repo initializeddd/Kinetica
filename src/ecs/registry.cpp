@@ -5,15 +5,16 @@ namespace Kinetica {
     const EntityID INVALID_ENTITY = CUUID::nil();
 
     EntityID CRegistry::createEntity() {
-        return CUUID::generate();  // Always fresh UUID
+        EntityID id =  CUUID::generate();
+        m_entities.insert(id);
+        return id;
     }
 
     void CRegistry::destroyEntity(EntityID id) {
-        if (id == INVALID_ENTITY) return;
-        // Remove all components for this entity
+        if (m_entities.erase(id) == 0) return;
+
         for (auto& pair : m_storages) {
-            // We can't call virtual erase, so skip — or use a different design
-            // For simplicity, just mark for reuse
+            pair.second->erase(id);
         }
     }
 

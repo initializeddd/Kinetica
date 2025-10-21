@@ -41,7 +41,7 @@ namespace Kinetica {
             return;
         }
 
-        // Define deleter lambda (captures nothing, so it's stateless)
+        // Define deleter lambda
         auto deleter = [](GLFWwindow* w) {
             if (w) {
                 glfwDestroyWindow(w);
@@ -49,7 +49,6 @@ namespace Kinetica {
             }
         };
 
-        // Assign with reset (or construct via make_unique-style, but we do this)
         m_pWindow = std::unique_ptr<GLFWwindow, decltype(deleter)>(raw, deleter);
         m_bValid = true;
 

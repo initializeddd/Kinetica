@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <memory>
 #include <typeindex>
+#include <unordered_set>
 
 #include "components/transform.hpp"
 #include "components/mesh.hpp"
@@ -16,7 +17,6 @@ namespace Kinetica {
 
     class CRegistry {
     public:
-        // Only UUID-based creation — no reuse
         EntityID createEntity();
 
         void destroyEntity(EntityID id);
@@ -33,14 +33,25 @@ namespace Kinetica {
         template<typename T>
         bool hasComponent(EntityID entity) const;
 
+        std::unordered_set<EntityID> m_entities;
+
+        std::vector<EntityID> getAllEntities() const {
+            return std::vector<EntityID>(m_entities.begin(), m_entities.end());
+        }
+
     private:
         struct IComponentStorage {
             virtual ~IComponentStorage() = default;
+            virtual void erase(EntityID id) = 0;
         };
 
         template<typename T>
         struct ComponentStorage : public IComponentStorage {
             std::unordered_map<EntityID, T> components;
+
+            void erase(EntityID id) override {
+                components.erase(id);
+            }
         };
 
         std::unordered_map<std::type_index, std::unique_ptr<IComponentStorage>> m_storages;
