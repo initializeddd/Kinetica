@@ -23,6 +23,8 @@ option(KINETICA_INSTALL "Generate install rules" ON)
 
 # ---- Dependencies ----
 include(FetchContent)
+
+# GLFW
 FetchContent_Declare(
     glfw
     GIT_REPOSITORY https://github.com/glfw/glfw.git
@@ -32,8 +34,21 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL        OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(glfw)
 
+# GLEW — Use ONLY the CMake-native version
+FetchContent_Declare(
+    glew
+    GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
+    GIT_TAG        f456deace7b408655109aaeff71421ef2d3858c6
+)
+set(BUILD_UTILS OFF CACHE BOOL "" FORCE)
+set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "" FORCE)  # Build static only
+set(glew-cmake_BUILD_STATIC ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(glfw glew)
+
+# System OpenGL (required on Linux/macOS; Windows has it in system DLLs)
+find_package(OpenGL REQUIRED)
 
 # ---- Source files ----
 file(GLOB_RECURSE KINETICA_SOURCES
@@ -50,6 +65,8 @@ file(GLOB_RECURSE KINETICA_HEADERS
 
 # ---- Main executable ----
 add_executable(kinetica ${KINETICA_SOURCES} ${KINETICA_HEADERS})
+
+target_compile_definitions(kinetica PRIVATE GLEW_EXPERIMENTAL)
 
 # ---- Include directories ----
 target_include_directories(kinetica
@@ -81,10 +98,18 @@ endif()
 # ---- Platform-specific settings ----
 if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
+    # On Windows, GLEW static needs this define
+    target_compile_definitions(kinetica PRIVATE GLEW_STATIC)
 elseif(APPLE)
-    # macOS: bundle support can be added later
+    # macOS: may need -framework OpenGL (handled by OpenGL::GL)
 endif()
 
+# ---- Link libraries ----
+target_link_libraries(kinetica PRIVATE
+    glfw
+    libglew_static
+    OpenGL::GL
+)
 # ---- Install rules ----
 if(KINETICA_INSTALL)
     install(TARGETS kinetica
@@ -108,5 +133,3 @@ message(STATUS "  Build Type:   ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Source Dir:   ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "  Binary Dir:   ${CMAKE_BINARY_DIR}")
 message(STATUS "  Warnings:     ${KINETICA_ENABLE_WARNINGS}")
-
-target_link_libraries(kinetica PRIVATE glfw)

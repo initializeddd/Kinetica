@@ -1,4 +1,6 @@
-#pragma once
+#ifndef KINETICA_WINDOW_HPP
+#define KINETICA_WINDOW_HPP
+
 #include <string>
 #include <memory>
 
@@ -18,11 +20,15 @@ namespace Kinetica {
         void show();
         void pollEvents();
         bool shouldClose() const;
+        void swap();
+
+        std::unique_ptr<GLFWwindow, void(*)(GLFWwindow*)> m_pWindow;
 
     private:
         void init();
-        std::unique_ptr<GLFWwindow, void(*)(GLFWwindow*)> m_pWindow;
         bool m_bValid = false;
     };
 
 } // namespace Kinetica
+
+#endif // KINETICA_WINDOW_HPP

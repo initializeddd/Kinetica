@@ -139,7 +139,7 @@ namespace Kinetica::Log {
 #undef KLOG_WARN
 #undef KLOG_ERROR
 
-// ---- Public macros (simple, no fmt) ----
+// ---- Public macros ----
 #ifdef KINETICA_DEBUG_LOG
 #if K_HAVE_SOURCE_LOCATION
 #define KLOG_DEBUG(msg) ::Kinetica::Log::log_impl("DEBUG", ::Kinetica::Log::Color::debug, std::string(msg))

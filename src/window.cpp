@@ -27,7 +27,11 @@ namespace Kinetica {
         }
 
         glfwSetErrorCallback(glfw_error_callback);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         GLFWwindow* raw = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -48,6 +52,8 @@ namespace Kinetica {
         // Assign with reset (or construct via make_unique-style, but we do this)
         m_pWindow = std::unique_ptr<GLFWwindow, decltype(deleter)>(raw, deleter);
         m_bValid = true;
+
+        glfwMakeContextCurrent(m_pWindow.get());
     }
 
     CWindow::~CWindow() = default;
@@ -55,6 +61,12 @@ namespace Kinetica {
     void CWindow::pollEvents() {
         if (m_bValid) {
             glfwPollEvents();
+        }
+    }
+
+    void CWindow::swap() {
+        if (m_bValid) {
+            glfwSwapBuffers(m_pWindow.get());
         }
     }
 

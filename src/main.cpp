@@ -1,3 +1,4 @@
+#include <kinetica/rendering.hpp>
 #include <kinetica/log.hpp>
 #include <kinetica/types.hpp>
 #include <kinetica/window.hpp>
@@ -74,9 +75,15 @@ int main(int argc, char* argv[]) {
         return static_cast<int>(Kinetica::EExitCode::InitializationFailed);
     }
 
+    glewInit();
+    Kinetica::CRenderer renderer(window);
+
     while (!window.shouldClose()) {
         window.pollEvents();
-        // TODO: Render frame
+
+        renderer.clear();
+
+        window.swap();
     }
 
     return static_cast<int>(Kinetica::EExitCode::Success);
