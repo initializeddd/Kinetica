@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <GL/glew.h>
 
 namespace Kinetica::Components {
 
@@ -20,6 +21,15 @@ namespace Kinetica::Components {
         std::vector<SVertex> vertices;
         std::vector<SIndex> indices;
         bool isDirty = true;
+
+        // --- GPU resources ---
+        GLuint vao = 0;
+        GLuint vbo = 0;
+        GLuint ebo = 0;
+
+        // Helper
+        GLsizei vertexCount() const { return static_cast<GLsizei>(vertices.size()); }
+        GLsizei indexCount() const { return static_cast<GLsizei>(indices.size() * 3); }
     };
 
 } // namespace Kinetica::Components

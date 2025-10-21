@@ -60,9 +60,14 @@ namespace Kinetica {
     // Inline template implementations
     template<typename T>
     T& CRegistry::addComponent(EntityID entity) {
-        auto& storage = static_cast<ComponentStorage<T>&>(
-            *m_storages[std::type_index(typeid(T))]
-        );
+        auto typeIdx = std::type_index(typeid(T));
+        auto it = m_storages.find(typeIdx);
+        if (it == m_storages.end()) {
+            // Create new storage for type T
+            auto newStorage = std::make_unique<ComponentStorage<T>>();
+            it = m_storages.emplace(typeIdx, std::move(newStorage)).first;
+        }
+        auto& storage = static_cast<ComponentStorage<T>&>(*it->second);
         return storage.components[entity];
     }
 

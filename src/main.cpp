@@ -2,6 +2,7 @@
 #include <kinetica/log.hpp>
 #include <kinetica/types.hpp>
 #include <kinetica/window.hpp>
+
 #include <kinetica/ecs/registry.hpp>
 
 #include <kinetica/ecs/components/transform.hpp>
@@ -57,7 +58,6 @@ publisher : Initialized
 )";
 }
 
-
 int main(int argc, char* argv[]) {
     Kinetica::SAppArgs args = parse_args(argc, argv);
     if (args.showHelp) {
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
             auto* material  = registry.getComponent<Kinetica::Components::SMaterial>(entity);
 
             if (transform && mesh && material) {
-                // renderer.renderEntity(*transform, *mesh, *material);
+                renderer.renderEntity(*transform, *mesh, *material);
             }
         }
 
